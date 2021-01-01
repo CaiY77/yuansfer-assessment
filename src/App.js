@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import {Form, Button, Message} from 'semantic-ui-react';
 import './App.css'
+import Payment from './payment';
 
 class App extends Component {
   constructor(props) {
@@ -30,7 +31,7 @@ class App extends Component {
       .then(response => response.data)
       .then(data =>{
         this.setState({
-          code: data.ret_code,
+          code: data,
           applyEmail:'',
           applyName:'',
           addSuccess: true,
@@ -65,8 +66,10 @@ class App extends Component {
   render() { 
     const { addSuccess, error, applyEmail, applyName, code, show} = this.state
     return (<div>
-      <div className='form-contain'>
+      
 
+      <div className='form-contain'>
+      <h1 className="main-head">Mock SandBox Creation</h1>
         <Form error className='form-Input' onSubmit = { this.createSandboxUser }>
 
           <Form.Input
@@ -96,25 +99,22 @@ class App extends Component {
           <div className="button-contain">
             <Button className="button-style" content="Create My Sandbox Account" color ="blue" />
           </div>
-          {
-            
-          }
+          
+          <Message 
+            className="err-mess"
+            color="green"
+            header="Success"
+            content="Your Sandbox Enviorment was successfully created!"
+            style={{display: (addSuccess)? 'block': 'none'}}
+          />
+          <Message 
+            error
+            className="err-mess"
+            header="Error"
+            content="There seems to be an issue creating your Sandbox Enviorment. Please try again later."
+            style={{display: (error)? 'block': 'none'}}
+          />
         </Form>
-
-        <Message 
-          className="err-mess"
-          color="green"
-          header="Success"
-          content="Your Sandbox Enviorment was successfully created!"
-          style={{display: (addSuccess)? 'block': 'none'}}
-        />
-        <Message 
-          error
-          className="err-mess"
-          header="Error"
-          content="There seems to be an issue creating your Sandbox Enviorment. Please try again later."
-          style={{display: (error)? 'block': 'none'}}
-        />
 
       </div>
 
@@ -124,12 +124,16 @@ class App extends Component {
             <Message 
               color='yellow'
               className="mess-contain"
-              header='Please use the following credentials:'
-              content={code}
-            />
+            >
+              <Message.Header>API Response</Message.Header>
+              <p> Ret Code : {code.ret_code} , Ret Msg : {code.ret_msg}</p>
+
+            </Message>
           </div>)
         : null
       }
+
+      <Payment />
 
     </div>);
   }

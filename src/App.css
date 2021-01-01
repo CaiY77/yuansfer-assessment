@@ -1,5 +1,5 @@
 .form-contain{
-    padding: 15vh 25vw 10vh 25vw;
+    padding: 10vh 25vw 10vh 25vw;
 }
 .form-font{
     font-size: 1.2rem;
@@ -44,4 +44,49 @@
 @keyframes fade{
     0%   { opacity:0; }
     100% { opacity:1; }
+}
+
+.main-head{
+    text-align: center;
+    padding:0 0 5vh 0;
+}
+.sub-heads{
+    font-size: 1.5rem;
+}
+.button-style-2{
+    font-size: 1.2rem !important;
+    padding: 10px 20px 10px 20px !important;
+    line-height: 25px !important;
+    margin-top: 3vh !important;
+    border-radius: 20px !important;
+    background: white !important;
+    border: limegreen solid 2px !important;
+    color: limegreen !important;
+}
+.button-style-2:hover{
+    background: limegreen !important;
+    color: white !important;
+}
+.form-2{
+    padding: 5vh 25vw 10vh 25vw;
+}
+.amount{
+    width: 10vw !important;
+}
+.field-style{
+    font-size: 2rem;
+}
+.mess-head{
+    font-size: 1.5rem !important;
+    padding: 0 0 2vh 0;
+    text-align: center;
+} 
+.mess-2{
+    font-size: 1.2rem !important;
+    word-wrap: break-word;
+}
+span{
+    font-weight:bolder;
+    color: black;
+    padding-right: 3px;
 }
