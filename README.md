@@ -10,4 +10,6 @@ Installs all dependencies
 
 Runs application on LocalHost:3000 (default)
 
-#### To see most of the functionality code  for part 1, go to > yuansfer-assessment > src > App.js, go to yuansfer-assessment > src > payment.js for part 2
+#### Part 1 functionality, go to > yuansfer-assessment > src > App.js
+
+#### Part 2 functionality, go to yuansfer-assessment > src > payment.js

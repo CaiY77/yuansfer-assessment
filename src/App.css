@@ -51,7 +51,7 @@
     padding:0 0 5vh 0;
 }
 .sub-heads{
-    font-size: 1.5rem;
+    font-size: 1.2rem;
 }
 .button-style-2{
     font-size: 1.2rem !important;
@@ -71,7 +71,7 @@
     padding: 5vh 25vw 10vh 25vw;
 }
 .amount{
-    width: 10vw !important;
+    width: 20vw !important;
 }
 .field-style{
     font-size: 2rem;
