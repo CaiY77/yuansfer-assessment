@@ -1,7 +1,7 @@
 import axios from 'axios';
 import md5 from 'md5';
 import React, { Component } from 'react';
-import {Form, Radio, Message,Button} from 'semantic-ui-react';
+import {Form, Radio, Message, Button, Dimmer, Loader} from 'semantic-ui-react';
 
 class Payment extends Component {
     constructor(props) {
@@ -11,7 +11,7 @@ class Payment extends Component {
             storeNo: '302263',
             amount:'',
             currency: '',
-            settleCurrency:'',
+            settleCurrency:'USD',
             vendor: '',
             ipnUrl: "http://zk-tys.yunkeguan.com/ttest/test",
             callbackUrl: "http://zk-tys.yunkeguan.com/ttest/test2?status={status}",
@@ -20,43 +20,28 @@ class Payment extends Component {
             verifySign: "",
             reference:Math.floor(Math.random()*100000).toString(),
             hashTok:'3a7062ccb098cb052188e25de891d2fa',
+            dim: false,
             data:{}
          }
     }
 
     pay = () =>{
         const {reference ,settleCurrency, merchantNo, storeNo, amount, currency, vendor, terminal, callbackUrl, ipnUrl,hashTok} = this.state
-        let temp = this.makeString();
 
-        let sign = `amount=${amount}&callbackUrl=${callbackUrl}&currency=${currency}&goodsInfo=${temp}&ipnUrl=${ipnUrl}&merchantNo${merchantNo}&reference=${reference}&settleCurrency=${settleCurrency}&storeNo=${storeNo}&terminal=${terminal}&timeout=120&vendor=${vendor}&${hashTok}`;
-        // let sign = `amount=${amount}&callbackUrl=${callbackUrl}&currency=${currency}&goodsInfo=${temp}&ipnUrl=${ipnUrl}&merchantNo${merchantNo}&reference=${reference}&storeNo=${storeNo}&terminal=${terminal}&timeout=120&vendor=${vendor}&${hashTok}`;
+        let sign = `amount=${amount}&callbackUrl=${callbackUrl}&currency=${currency}&ipnUrl=${ipnUrl}&merchantNo=${merchantNo}&reference=${reference}&settleCurrency=${settleCurrency}&storeNo=${storeNo}&terminal=${terminal}&timeout=120&vendor=${vendor}&${hashTok}`;
+                
         let hash = md5(sign)
 
-        console.log(sign)
-        console.log(hash)
-
         this.setState({
+            dim: true,
             verifySign: hash
         }, ()=>{
             this.makeCall();
         })
     }
 
-    makeString = () => {
-        const {goodsInfo} = this.state
-        let temp = '[{'
-        let goods = goodsInfo[0]
-        for(let props in goods){
-            let val = goods[props]
-            temp += `"${props}":"${val}",`
-        }
-        temp = temp.slice(0,-1)
-        temp += '}]'
-        return temp
-    }
-
     makeCall = async ()=> {
-        const {reference ,settleCurrency, merchantNo, storeNo, amount, currency, vendor, terminal, callbackUrl, ipnUrl, goodsInfo,verifySign} = this.state
+        const {reference ,settleCurrency, merchantNo, storeNo, amount, currency, vendor, terminal, callbackUrl, ipnUrl, verifySign} = this.state
         
         let paymentInfo= {
             merchantNo:merchantNo,
@@ -67,13 +52,12 @@ class Payment extends Component {
             terminal:terminal,
             ipnUrl:ipnUrl,
             callbackUrl:callbackUrl,
-            goodsInfo:goodsInfo,
-            settleCurrency:settleCurrency,
             reference:reference,
+            settleCurrency:settleCurrency,
+            timeout:120,
             verifySign:verifySign
         }
 
-        console.log(paymentInfo)
         let prox = "https://cors-anywhere.herokuapp.com/"
         let url = 'https://mapi.yuansfer.yunkeguan.com/online/v3/secure-pay'
 
@@ -81,9 +65,9 @@ class Payment extends Component {
             await axios.post( prox + url, paymentInfo)
             .then(res => res.data)
             .then( data => {
-                console.log(data)
                 this.setState({
-                    data:data
+                    data:data,
+                    dim: false
                 })
             })
 
@@ -92,7 +76,7 @@ class Payment extends Component {
         }
     }
 
-    handleCurr = (e,{value})=> this.setState({currency: value,settleCurrency:value})
+    handleCurr = (e,{value})=> this.setState({currency: value})
     handleVend = (e,{value})=> this.setState({vendor: value})
     handleTerm = (e,{value})=> this.setState({terminal: value})
 
@@ -102,7 +86,7 @@ class Payment extends Component {
 
 
     render() { 
-        const { amount, currency, vendor,terminal,data, merchantNo, storeNo, hashTok,reference} = this.state
+        const { dim, amount, currency, vendor,terminal,data, merchantNo, storeNo, hashTok,reference} = this.state
         return ( <div className="form-2">
             <h1 className="main-head">Mock Secure Payment</h1>
 
@@ -136,7 +120,7 @@ class Payment extends Component {
                     <Form.Field  className ="field-style" control={Radio} label="PHP" value="PHP" name = 'currency' checked={currency === 'PHP'} onChange={this.handleCurr} />
                     <Form.Field  className ="field-style" control={Radio} label="IDR" value="IDR" name = 'currency' checked={currency === 'IDR'} onChange={this.handleCurr} />
                     <Form.Field  className ="field-style" control={Radio} label="KRW" value="KRW" name = 'currency' checked={currency === 'KRW'} onChange={this.handleCurr} />
-                    <Form.Field  className ="field-style" control={Radio} label="HDK" value="HDK" name = 'currency' checked={currency === 'HDK'} onChange={this.handleCurr} />
+                    <Form.Field  className ="field-style" control={Radio} label="HKD" value="HKD" name = 'currency' checked={currency === 'HKD'} onChange={this.handleCurr} />
                 </Form.Group>
                 
                 {
@@ -163,6 +147,14 @@ class Payment extends Component {
                 </div>
 
             </Form>  
+            {
+                (dim)
+                ? (<Dimmer className="dimmer" active>
+                    <Loader size='massive'>Making Payment . . .</Loader>
+                </Dimmer>)
+                : null
+            }
+
         </div> );
     }
 }

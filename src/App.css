@@ -90,3 +90,7 @@ span{
     color: black;
     padding-right: 3px;
 }
+
+.dimmer{
+    position: fixed !important;
+}

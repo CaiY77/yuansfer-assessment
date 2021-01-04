@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import {Form, Button, Message} from 'semantic-ui-react';
+import {Form, Button, Message, Dimmer, Loader} from 'semantic-ui-react';
 import './App.css'
 import Payment from './payment';
 
@@ -14,13 +14,18 @@ class App extends Component {
       error: false,
       addSuccess: false,
       show:false,
-      code: ''
+      code: '',
+      dim:false
     }
   }
 
   createSandboxUser = async () => {
 
     const {applyName , applyEmail} = this.state;
+
+    this.setState({
+      dim:true
+    })
 
     const params = new URLSearchParams();
     params.append('applyName',applyName);
@@ -32,10 +37,9 @@ class App extends Component {
       .then(data =>{
         this.setState({
           code: data,
-          applyEmail:'',
-          applyName:'',
           addSuccess: true,
-          show: true
+          show: true,
+          dim: false
         })
       })
       
@@ -64,7 +68,7 @@ class App extends Component {
   };
 
   render() { 
-    const { addSuccess, error, applyEmail, applyName, code, show} = this.state
+    const { dim,addSuccess, error, applyEmail, applyName, code, show} = this.state
     return (<div>
       
 
@@ -132,7 +136,13 @@ class App extends Component {
           </div>)
         : null
       }
-
+      {
+        (dim)
+        ? (<Dimmer className="dimmer" active>
+            <Loader size='massive'>Creating Account . . .</Loader>
+        </Dimmer>)
+        : null
+      }
       <Payment />
 
     </div>);
